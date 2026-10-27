@@ -555,27 +555,58 @@ with tab_scenario:
 # Gap map
 # --------------------------------------------------------------------------- #
 with tab_gap:
-    st.markdown("## What Ramp already documents, and where this sits")
+    st.markdown("## What Ramp already ships, and where this sits")
     _caption(
-        "Built from Ramp's public help centre and marketing pages only. It is not evidence about "
-        "what exists inside Ramp, and the right next step is asking people who would know."
+        "Each row links to a live Ramp page, fetched and checked during this project rather than "
+        "assumed. Ramp's public surface is more capable than a first pass at this research "
+        "suggested — see the revision note below the table."
     )
     gap = pd.DataFrame(
         [
-            ("Read an invoice and extract its fields", "Documented publicly", "Not rebuilt here"),
-            ("Flag a bill that needs review", "Documented publicly", "Not rebuilt here"),
-            ("Recommend an approval decision with AI", "Documented publicly", "Not rebuilt here"),
-            ("Route a bill through an approval policy", "Documented publicly", "Not rebuilt here"),
-            ("Keep an audit history of what happened", "Documented publicly", "Not rebuilt here"),
-            ("Count exceptions by category", "Likely available in reporting", "Baseline tab, for contrast"),
-            ("Separate first occurrences from repeats", "Not found in public docs", "Core of this prototype"),
-            ("Rank causes by what a fix would be worth", "Not found in public docs", "Where to fix tab"),
-            ("Tie a cause to a named upstream change", "Not found in public docs", "Intervention catalogue"),
-            ("Size the experiment before running it", "Not found in public docs", "Power check"),
+            ("Bill Pay: Needs Review queue", "Central queue for payments needing intervention, including missing information", "Already provides exception triage"),
+            ("AP Review Agent", "Checks bills against policy, contracts, POs and supporting documents; flags inconsistencies", "Already detects many invoice exceptions"),
+            ("Approval Intelligence", "AI summaries, anomaly flags, recommendations, historical spending context", "Already assists human reviewers"),
+            ("Smart OCR & Auto-coding", "Extracts invoice data, learns GL coding from historical corrections", "Already addresses missing/incorrect GL coding"),
+            ("Bill Pay Submission Policies", "Validates required fields at submission, flags violations, records overrides", "Already enforces preventive controls"),
+            ("Audit Logs & Bills/Vendors APIs", "Records workflow events; agent attribution added Sep 2026", "Credible data foundation, not yet exposed as recurrence analysis — see below"),
         ],
-        columns=["Capability", "Public evidence", "This prototype"],
+        columns=["Public Ramp capability", "What it does", "Relevance to this project"],
     )
     st.dataframe(gap, hide_index=True, use_container_width=True)
+
+    st.markdown(
+        "<div class='erl-panel erl-panel--accent'><p class='erl-eyebrow'>Revised, not discovered</p>"
+        "<p>An earlier pass at this research read Ramp's public surface as a plain exception "
+        "detector and concluded a recurrence layer was simply missing. It wasn't wrong about the "
+        "gap, but it understated how much Ramp already automates: an AI agent reviews bills "
+        "against policy and documents today, and submission policies already prevent some of what "
+        "this prototype's interventions propose. The gap this project actually stands behind is "
+        "narrower and more precise: no public Ramp page shows all four of (1) grouping historical "
+        "exceptions into recurring root-cause patterns, (2) estimating which patterns cost the "
+        "most avoidable work, (3) recommending an upstream change per pattern, and (4) tracking "
+        "whether that change reduced recurrence. Any one or two of those might already exist "
+        "privately — see CASESTUDY.md for the full revision.</p></div>",
+        unsafe_allow_html=True,
+    )
+
+    st.markdown("### A real data foundation, verified directly")
+    st.markdown(
+        "Ramp's `GET /developer/v1/audit-logs/events` endpoint returns an `actor_type` "
+        "(`policy_agent`, `spend_request_agent`, `ramp`, or `user`) and an `agent_details.agent_name` "
+        "field on every event — confirmed by reading the live OpenAPI schema, not assumed. That is a "
+        "real foundation for a Bills + Vendors + Audit Logs integration. Two limits showed up in the "
+        "same schema: the event-type list includes an `Exception` family, but those events are "
+        "policy-limit overrides, not invoice-processing exceptions like a missing PO or a GL miscode; "
+        "and the Bills endpoint carries no root-cause or review-time field. A real version of this "
+        "tool would have to infer recurrence from proxies — repeated `Violation from rule` events on "
+        "the same vendor, say — rather than read it off a label, the way this synthetic dataset does."
+    )
+    _caption(
+        '<a href="https://docs.ramp.com/developer-api/v1/api/audit-logs">Audit Logs API</a> &middot; '
+        '<a href="https://docs.ramp.com/developer-api/v1/changelog">Developer API changelog</a> &middot; '
+        '<a href="https://support.ramp.com/ap-agents-available-in-ramp-bill-pay">AP agents in Bill Pay</a> &middot; '
+        '<a href="https://support.ramp.com/managing-bills-and-payments-on-bill-pay">Managing bills and payments</a>'
+    )
 
     st.markdown(
         "<div class='erl-panel'><p class='erl-eyebrow'>Honest limits</p>"
@@ -585,4 +616,4 @@ with tab_gap:
         "argument, not the numbers.</p></div>",
         unsafe_allow_html=True,
     )
-    _caption("PRD.md, CASESTUDY.md and DESIGN.md in the repository carry the full reasoning.")
+    _caption("PRD.md, CASESTUDY.md, ASSUMPTIONS.md and DESIGN.md in the repository carry the full reasoning.")

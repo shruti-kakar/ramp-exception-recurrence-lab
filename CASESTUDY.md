@@ -9,28 +9,110 @@ my own pitch.
 
 ---
 
-## 1. How I looked for the gap
+## Why I chose this problem: from audit and risk to product
+
+At JPMorgan Chase, I've worked at the intersection of financial data, audit,
+risk, and technology, where I've seen firsthand how much operational effort
+goes into identifying, investigating, and resolving exceptions.
+
+My work has involved validating financial workflows, investigating
+inconsistencies across multiple systems, and testing AI-driven processes to
+ensure they produce accurate, reliable results. Through Python and Alteryx
+automation, I've helped reduce manual validation effort by approximately 40%,
+while also developing testing approaches for multi-agent workflows.
+
+One thing that stood out to me was that resolving an exception doesn't
+necessarily prevent it from happening again. Teams can spend significant time
+investigating individual issues without always having a systematic way to
+connect those issues to recurring upstream causes.
+
+That experience shaped how I approached Ramp's Bill Pay product. Ramp has
+already built sophisticated capabilities around detecting anomalies, reviewing
+invoices, and enforcing financial controls — more sophisticated than I gave it
+credit for on a first pass, see below. I was interested in exploring what
+could come next: could exception history become a feedback loop that helps
+finance teams identify recurring problems, prioritize preventative changes,
+and measure whether those interventions work?
+
+This project brings together two parts of my experience that I particularly
+enjoy: the rigor of financial controls and the creativity of building
+products. Having worked on the validation and risk side, I'm drawn to building
+tools that don't just identify problems, but help prevent them at scale.
+
+## 1. How I looked for the gap, and how that research evolved
 
 I started from a constraint rather than an idea: I have no access to Ramp's
 internals, so anything I claim has to be falsifiable from public material and
-honest about what it cannot see.
+honest about what it cannot see. That turned out to matter twice — once for
+Ramp's internals, and once for my own first pass at the research.
 
-So I read Ramp's public help centre and marketing pages and wrote down every
-exception-handling capability they describe. Invoice field extraction. A
-needs-review surface. AI approval recommendations. Configurable submission
-policies. Approval routing. Audit history. That list is the reason I did not
-build an invoice exception detector: it already exists, and rebuilding a
-documented feature is a demo, not a product argument.
+### The first pass, and what it got wrong
 
-What I could not find documented was anything that treats an exception's
-**recurrence** as the unit of work. Every surface I found is organised around
-closing the case in front of you. None of the public material describes
-distinguishing the first time a vendor hits a problem from the eleventh, which
-is the distinction that decides whether you resolve or prevent.
+The earliest version of this research read Ramp's public material at the
+surface level — invoice field extraction, a needs-review queue, "AI approval
+recommendations," approval routing, audit history — and concluded that nothing
+public treated an exception's *recurrence* as the unit of work. That
+conclusion was directionally right but the picture behind it was too coarse.
+It described Ramp's surfaces the way a user manual would, not the way the
+actual product behaves.
 
-That became the hypothesis. I want to be precise about its status: absence from
-public documentation is not evidence of absence from the product. It is a
-reasonable place to start a conversation, and nothing more.
+### The second pass: what Ramp actually ships
+
+Reading the live pages and the live API schema directly, rather than a
+category list, changes the picture:
+
+| Public Ramp capability | What it does | Relevance to this project |
+| --- | --- | --- |
+| [Bill Pay: Needs Review](https://support.ramp.com/managing-bills-and-payments-on-bill-pay) | Central queue for payments requiring intervention, including missing information | Already provides exception triage |
+| [AP Review Agent](https://support.ramp.com/ap-agents-available-in-ramp-bill-pay) | Uses policies, contracts, POs, and supporting documents to flag inconsistent bills, editable through Ask Ramp | Already detects many invoice exceptions |
+| Approval Intelligence | AI summaries, anomaly flags, recommendations, historical spending context | Already assists human reviewers |
+| Smart OCR and auto-coding | Extracts invoice data and learns GL coding from historical corrections | Already addresses missing and incorrect GL coding |
+| [Bill Pay submission policies](https://support.ramp.com/bill-pay-set-up) | Validates required information, flags violations, records overrides | Already enforces preventive controls |
+| [Audit Logs API](https://docs.ramp.com/developer-api/v1/api/audit-logs) and Bills/Vendors APIs | Records workflow events; agent attribution added in the September 2026 changelog | Potential foundation for recurrence analysis — see §5 |
+
+Fetching [support.ramp.com/ap-agents-available-in-ramp-bill-pay](https://support.ramp.com/ap-agents-available-in-ramp-bill-pay)
+directly turned up a detail the first pass missed entirely: Ramp's fraud
+detection already flags suspicious duplicate invoices. That overlaps this
+project's "duplicate invoice" root cause directly, and it's exactly the kind
+of fact a surface-level read skips past.
+
+Building a basic LLM that recommends invoice corrections, or a dashboard of
+flagged invoices, would now substantially overlap existing Ramp product. That
+wasn't as obvious before this second pass, which is the whole reason the
+revision matters: the first version of this project would have proposed
+rebuilding something that already exists.
+
+### What narrowed, not what disappeared
+
+The gap didn't vanish under scrutiny. It got more precise. I could not verify
+a customer-facing Ramp feature that does all four of the following *together*:
+
+1. Groups historical exceptions into recurring root-cause patterns.
+2. Estimates which patterns create the most avoidable operational work.
+3. Recommends upstream process changes based on those patterns.
+4. Tracks whether those changes actually reduce recurrence over time.
+
+That four-part definition, not the vaguer "recurrence as the unit of work"
+from the first pass, is what this prototype actually tests. Any one or two of
+those four may already exist privately inside Ramp, or spread across
+analytics and workflow features this research can't see. Absence from public
+documentation is evidence about documentation, not about the product — true on
+the first pass, and still true on the second, more careful one.
+
+**How I'd position this to Ramp**, after both passes:
+
+> Ramp has built strong capabilities for invoice intake, detecting anomalies,
+> enforcing policies, and managing reviews. Based on my experience
+> investigating exceptions at JPMorgan, I wanted to explore the next
+> operational question: how can the historical patterns behind those
+> exceptions help teams prioritize preventative changes? I built an
+> independent prototype to test that hypothesis and identify what additional
+> customer evidence would be needed.
+
+A proposed product improvement informed by public research, not a claimed
+discovery. Full source-by-source verification, including which claims are
+checked against a live page and which were carried from an earlier pass
+without independent re-verification, is in [`ASSUMPTIONS.md`](ASSUMPTIONS.md).
 
 ## 2. The hypothesis
 
@@ -156,7 +238,69 @@ This is the finding I would lead with in an interview. Not because the maths is
 hard, but because writing the power check into the tool is what turned a
 plausible-sounding plan into a wrong one, before anyone spent a month on it.
 
-## 5. What my own model gets wrong
+## 5. A real data foundation: Ramp's own APIs
+
+Everything above runs on a synthetic CSV because that's what an outsider can
+responsibly build. But the most useful discovery in the second research pass
+wasn't a capability gap — it was that Ramp already exposes a plausible data
+foundation for this, publicly, in its developer API.
+
+**The Audit Logs API.** `GET /developer/v1/audit-logs/events` returns a record
+of actions by users, agents, and integrations, filterable by date, type, user,
+and resource. I read the live schema directly rather than take that summary on
+faith, and two details stood out:
+
+- Every event carries an `actor_type` — `policy_agent`, `spend_request_agent`,
+  `ramp`, or `user` — plus an `agent_details.agent_name` field. That's the
+  agent-attribution capability the September 2026 changelog added, and it
+  means a real integration could already tell which exceptions a human closed
+  versus which an AI agent handled.
+- The event-type enum includes an `Exception` family — `Exception requested`,
+  `Exception request approved`, `Exception request denied`. Reading the full
+  enum rather than the name alone shows these are **policy-limit override
+  exceptions** (someone requesting an exception to a spend or approval rule),
+  **not invoice-processing exceptions** like a missing PO or a GL miscode. The
+  two are easy to conflate from the outside, and the audit log doesn't use the
+  word the way this project does.
+
+**The Bills and Vendors APIs.** `GET /developer/v1/bills` returns
+`accounting_field_selections`, `approval_status`, `bill_owner`, and vendor
+linkage — but no field resembling this project's `root_cause` or
+`minutes_spent`. That absence is informative on its own: if Ramp has an
+internal recurrence-analysis layer, it isn't simply reading a label off this
+endpoint. It would have to be inferred.
+
+**What a real version of this project would have to do differently.** Instead
+of a `root_cause` column, infer recurrence from proxies: repeated
+`Violation from rule` events against the same vendor, repeated
+`Bill pay submission policy updated` exemptions, or clusters of
+`Exception requested` events tied to the same cost center. That's a weaker
+signal than a labelled column, and a real build would need to validate it
+against cases an AP admin actually agrees were the same recurring problem
+before trusting the inference — which is exactly the kind of validation this
+synthetic prototype was built to avoid needing, and a real one couldn't skip.
+
+This is logged as `MILESTONES.md` M9, sequenced after the operator interviews
+in M8 on purpose: building an inference layer before anyone has confirmed
+recurrence is the right lens would be solving a problem no operator has
+validated, with real API complexity standing in for real evidence.
+
+Conceptual architecture only, not an existing Ramp integration, and not
+something this project has the customer access to build:
+
+```
+Ramp Bills API ──┐
+Ramp Vendors API ─┼─→  recurrence inference  →  root_cause_table()  →  this app's
+Ramp Audit Logs ──┘        (new, M9)             (unchanged, src/analytics.py)    5 tabs
+```
+
+The right-hand side of that diagram — the ranking, the worklist, the scenario
+model, the power check — is already built and tested against synthetic data.
+What's missing is the left-hand side: authorized customer access, API
+permissions, and a validated way to turn audit events into the same shape the
+rest of the app already expects.
+
+## 6. What my own model gets wrong
 
 **The prevention index cannot see reopens.** Approval routing has the highest
 reopen rate in the dataset at 23%, nearly double every other cause, and the model
@@ -181,7 +325,7 @@ a record of how each cause was validated.
 known. In practice someone inferred it from a symptom, and the inference can be
 wrong in a way that quietly misdirects every number downstream.
 
-## 6. What I would do next, in order
+## 7. What I would do next, in order
 
 1. **Five operator interviews.** Are these the real causes? Does recurrence feel
    like the problem, or is it cycle time? What would you do with the worklist?
@@ -194,8 +338,13 @@ wrong in a way that quietly misdirects every number downstream.
    already a labelled evaluation set, so a classifier can be measured against a
    keyword baseline rather than demoed. It is the most impressive-looking
    addition and the least evidence-backed, so it goes last.
+5. **Only with real customer access, the real data foundation.** Swap the
+   synthetic CSV for Ramp's Audit Logs, Bills and Vendors APIs (§5), inferring
+   recurrence from event proxies instead of a labelled column, and validate
+   that inference against cases an AP admin actually agrees are the same
+   recurring problem before trusting it.
 
-## 7. What this is not
+## 8. What this is not
 
 No Ramp integration, no authentication, no real customer data, no AI inference,
 no measured savings. Every figure in this document comes from synthetic data
@@ -215,5 +364,7 @@ make test
 make app
 ```
 
-`make test` runs 58 tests. The figures in sections 4 and 5 come from the bundled
-seed, so they will match exactly.
+`make test` runs 58 tests. The figures in section 4 come from the bundled seed,
+so they will match exactly. Section 1's capability table and section 5's API
+schema findings are cited to live Ramp pages instead — see `ASSUMPTIONS.md` for
+exactly which claims were fetched directly versus carried from an earlier pass.

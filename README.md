@@ -35,19 +35,29 @@ screen traces back to a file or a cited source — see
 
 ## Why this and not an exception detector
 
-Ramp's public documentation already describes invoice field extraction, a
-needs-review surface, AI approval recommendations, configurable submission
-policies, approval routing and audit history. Building another exception
-detector would rebuild a documented feature.
+Ramp already ships a [Needs Review queue](https://support.ramp.com/managing-bills-and-payments-on-bill-pay),
+an [AP Review Agent](https://support.ramp.com/ap-agents-available-in-ramp-bill-pay)
+that checks bills against policy and supporting documents, AI anomaly flags,
+[submission policies](https://support.ramp.com/bill-pay-set-up) that validate
+required fields, and an [Audit Logs API](https://docs.ramp.com/developer-api/v1/api/audit-logs)
+with agent attribution. I verified each of those directly against a live page
+or the live API schema rather than assuming them — the full capability table
+and an earlier, coarser read of this same research that I had to correct are
+both in [`CASESTUDY.md`](CASESTUDY.md#1-how-i-looked-for-the-gap-and-how-that-research-evolved).
+Building another exception detector or a basic LLM invoice-correction bot would
+now substantially overlap what's already shipped.
 
-What I could not find in public material is anything that treats an exception's
-**recurrence** as the unit of work — the difference between the first time a
-vendor hits a problem and the eleventh. That distinction is what decides whether
-a team resolves cases or prevents them, and it is the whole subject of this
-project.
+What I could not find, across any of that, is a feature that does all four of
+these together: group historical exceptions into recurring root-cause
+patterns, estimate which patterns cost the most avoidable work, recommend an
+upstream change per pattern, and track whether that change actually reduced
+recurrence. That four-part gap, not a vaguer "nothing treats recurrence as the
+unit of work," is what this prototype tests.
 
-Absence from public docs is not evidence of absence from the product. This is a
-conversation starter, not a claim about Ramp's internals.
+Absence from public docs is evidence about documentation, not about the
+product. This is a proposed product improvement informed by public research,
+not a claimed discovery — and Ramp's own Audit Logs, Bills, and Vendors APIs
+are a credible real foundation for it, detailed in `CASESTUDY.md` §5.
 
 ## What it does
 

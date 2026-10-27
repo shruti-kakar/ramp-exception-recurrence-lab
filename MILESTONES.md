@@ -117,6 +117,29 @@ with the worklist. Replace the fixability priors with their answers.
 - Exit check: every prior in `FIXABILITY_PRIOR` cites an interview rather than
   the author's estimate.
 
+### M9 — Real data foundation: Ramp's own APIs · not started
+Ramp's Audit Logs API (`GET /developer/v1/audit-logs/events`) returns
+`actor_type` and `agent_details.agent_name` on every event, verified against
+the live OpenAPI schema — a real foundation for pulling exception history
+instead of generating it. Two limits came out of the same schema check: the
+event-type enum's `Exception` family is policy-limit overrides, not invoice
+exceptions, and the Bills API carries no root-cause or review-time field. A
+real integration would read `GET /developer/v1/bills`, `GET /developer/v1/vendors`
+and the audit log, then infer recurrence from proxies — repeated
+`Violation from rule` events on the same vendor, repeated submission-policy
+exemptions — rather than read a `root_cause` column that doesn't exist.
+- Files: new `src/ramp_client.py` (read-only API client), new `src/infer.py`
+  (proxy-based recurrence signal from audit events), `ASSUMPTIONS.md` §3 for
+  the verified schema fields
+- Exit check: a script that takes exported Bills/Vendors/Audit-log JSON (not
+  live credentials — this project has no Ramp customer access) and produces
+  the same `root_cause_table` shape `analytics.py` already outputs from the
+  synthetic CSV, so the rest of the app is unchanged.
+- Why it is not done yet: it requires authorized customer API access this
+  project doesn't have, and building an inference layer before confirming
+  with M8 that recurrence is the right lens would be solving a problem no
+  operator has validated. Sequenced after M8 on purpose.
+
 ## Status
 
 | Milestone | State | Verified by |
@@ -130,5 +153,6 @@ with the worklist. Replace the fixability priors with their answers.
 | M6 Reopen-weighted ranking | not started | — |
 | M7 AI root-cause assist | not started | — |
 | M8 Operator validation | not started | — |
+| M9 Real API data foundation | not started | — |
 
 58 tests pass. Run `make test` to confirm.

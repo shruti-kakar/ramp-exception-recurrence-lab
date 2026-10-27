@@ -56,22 +56,50 @@ and the ones a real pilot (see `CASESTUDY.md` §5) would replace first.
 
 ## 3. External resources
 
-What Ramp's product actually does is cited, not assumed. Two tiers:
+What Ramp's product actually does is cited, not assumed. This went through two
+passes. The first pass (behind the original PRD) worked from a secondhand
+brief and read Ramp's surface as a plain exception detector. The second pass,
+below, fetched the live pages and the live API schema directly — it's more
+accurate, and it's what the Gap Map tab and `PRD.md` now state.
 
-**Directly verified in this repository's research** (fetched and checked
-during this project):
+**Product pages, fetched and read directly:**
 
 - [ramp.com/accounts-payable](https://ramp.com/accounts-payable) — Ramp's own
   Bill Pay / AP product page
-- [support.ramp.com/managing-bills-and-payments-on-bill-pay](https://support.ramp.com/managing-bills-and-payments-on-bill-pay) — the needs-review and payment-queue surface referenced in the Gap Map tab
+- [support.ramp.com/managing-bills-and-payments-on-bill-pay](https://support.ramp.com/managing-bills-and-payments-on-bill-pay) — the Needs Review queue and payment workflow stages
+- [support.ramp.com/ap-agents-available-in-ramp-bill-pay](https://support.ramp.com/ap-agents-available-in-ramp-bill-pay) — confirmed six named AI agents/features, including that the AP Policy Review agent is user-editable through Ask Ramp, and that fraud detection already flags duplicate invoices — directly overlapping this project's "duplicate invoice" root cause
 - [support.ramp.com/bill-pay-set-up](https://support.ramp.com/bill-pay-set-up) — approval policy and threshold configuration
 - [support.ramp.com/employee-roles-and-permissions-on-bill-pay](https://support.ramp.com/employee-roles-and-permissions-on-bill-pay) — approval routing and role-based review
 
-**Carried from the original project brief, not independently re-verified by
-this repository's own research:** the claim that Ramp documents AI-generated
-approval recommendations and full audit history. Treat those two specifically
-as secondhand until someone checks them directly — the Gap Map tab's "Not
-found in public docs" rows are the ones this project actually stands behind.
+**API schema, fetched and read directly** (the documentation site itself is a
+JS shell; the machine-readable reference at `docs.ramp.com/llms-api.txt` has
+the real OpenAPI-derived schema):
+
+- [docs.ramp.com/developer-api/v1/api/audit-logs](https://docs.ramp.com/developer-api/v1/api/audit-logs) —
+  `GET /developer/v1/audit-logs/events`. Verified fields: `actor_type`
+  (`policy_agent` | `spend_request_agent` | `ramp` | `user`),
+  `agent_details.agent_name`, `event_time`, `primary_reference.resource_name`.
+  The event-type enum includes an `Exception` family (`Exception requested`,
+  `Exception request approved/denied`), but reading the full enum shows those
+  are **policy-limit override exceptions, not invoice-processing exceptions**
+  like a missing PO or a GL miscode — an easy claim to conflate, and the kind
+  of distinction that only shows up by reading the actual schema rather than
+  the page summary.
+- [docs.ramp.com/developer-api/v1/changelog](https://docs.ramp.com/developer-api/v1/changelog) — Developer API changelog
+- `GET /developer/v1/bills` — checked for a root-cause or review-time field.
+  There isn't one. `accounting_field_selections`, `approval_status`,
+  `bill_owner` and vendor linkage are all present; nothing resembling this
+  project's `root_cause` or `minutes_spent` columns exists anywhere in the
+  schema. That absence is itself evidence: a recurrence-analysis layer, if
+  Ramp has one, is not simply reading these fields off the Bills API.
+
+**Design references** (typeface and colour approximations, not confirmed
+against an official Ramp brand guide — full caveat in [`DESIGN.md`](DESIGN.md)):
+a public design-system write-up at
+[oh-my-design.kr/design-systems/ramp](https://oh-my-design.kr/design-systems/ramp)
+and Ramp's own marketing site. One source,
+[designmd.co/d/ramp](https://www.designmd.co/d/ramp), returned a 403 when
+fetched directly and could not be verified — its claims are not repeated here.
 
 **Design references** (typeface and colour approximations, not confirmed
 against an official Ramp brand guide — full caveat in [`DESIGN.md`](DESIGN.md)):
