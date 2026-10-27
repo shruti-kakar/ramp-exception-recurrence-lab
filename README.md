@@ -62,6 +62,96 @@ prevention index = addressable repeat hours per month
 The volume ranking stays on screen next to it. Where the two agree, this tool
 adds nothing; the disagreements are the only place it earns its keep.
 
+## How I'd actually use this
+
+I didn't design the five tabs as five separate reports. They're one sitting,
+in order, the way I'd expect a Product Ops reviewer to actually work through a
+month's exception backlog. Here's that sitting, with the app's own output at
+each step.
+
+**Start with the damage, not the detail.** Open the app and the Baseline tab
+is waiting with the whole window already summarized: 300 exceptions, 63%
+repeats, 118 reviewer hours, 12% of closed cases reopening. That last number is
+the one I look at first, because a reopen is worse than a slow resolution — it
+means someone closed the case and was wrong. The chart underneath splits those
+118 hours into what a feedback loop could touch and what it couldn't: 75 hours
+sat on problems the team had already seen before.
+
+![Baseline tab: headline metrics, the first-versus-repeat split, and the six-month trend](docs/screenshots/tab1_baseline.png)
+
+**Then ask which fire to put out first — not the biggest, the most worth
+fighting.** This is the move the whole project is built around. The Where to
+fix tab doesn't just sort root causes by how many exceptions they generated;
+it multiplies addressable repeat hours by how concentrated the problem is
+among a handful of vendors and by how fixable the cause plausibly is at all.
+Missing PO stays on top either way, but vendor details and GL coding swap
+places once concentration enters the picture, and duplicate invoices — the
+second-biggest pool of repeat hours — drop to fourth because nothing short of
+real matching logic removes them. I keep the naive volume ranking printed
+right next to it on purpose: if the two agree, I didn't need the fancier
+model.
+
+![Where to fix tab: the prevention-index ranking, the ranking-change callout, and a candidate intervention](docs/screenshots/tab2_where_to_fix.png)
+
+**Turn the ranking into a worklist a human can actually run.** A root cause
+is an abstraction; a vendor is a phone call. The Worklist tab drills from
+"missing PO" down to the 19 times Atlas Freight specifically did it, when
+each case opened, and whether it's still sitting open. This is the view I'd
+hand to the AP admin who owns vendor relationships — not "fix GL coding" but
+"here are the six vendors responsible for most of it, ranked by hours spent."
+
+![Worklist tab: recurring vendor and cause pairs with repeat hours, days recurring, and still-open counts](docs/screenshots/tab3_worklist.png)
+
+**Before promising anyone a number, stress-test the number.** The Prevention
+scenario tab is where I made myself uncomfortable. Move the slider to a 10%
+reduction assumption and the app does the arithmetic honestly: 1.3 hours a
+month, banded low-to-high, translated into an annualized cost. It also runs
+the sample-size math for whatever pilot window you're proposing, which is how
+I caught my own PRD proposing a 30-day experiment that would need eleven
+months of bill volume to actually detect a 20% improvement. I'd rather find
+that out moving a slider than three weeks into a pilot.
+
+![Prevention scenario tab: the reduction slider, banded projections, and the statistical power check](docs/screenshots/tab4_prevention_scenario.png)
+
+**Close by naming what you didn't just build.** The Gap map tab is the
+honesty check, laid out as a table: what Ramp already documents publicly,
+what this prototype adds on top, and where the two overlap. It's the page I'd
+put in front of a skeptical reviewer first, because it says plainly that this
+is not a Bill Pay rebuild — it's one layer, tested against one hypothesis,
+with everything else left where Ramp already has it covered.
+
+![Gap map tab: capability audit against Ramp's public documentation, and the stated limits](docs/screenshots/tab5_gap_map.png)
+
+That's the loop: scope the damage, rank what's worth fixing, turn the winner
+into a worklist, pressure-test the number before anyone commits to it, and say
+out loud what you didn't build. Running it monthly is what would tell you
+whether last month's fix actually moved anything.
+
+## Who reaches for this, and when
+
+Three people would open this tool, and they'd open it for different reasons.
+
+**The Product Ops lead picking next quarter's bet.** They own a backlog of
+possible workflow improvements and a limited number of engineering favors they
+can call in. The Where to fix tab is built for exactly that moment — not "what
+takes the most time" but "what's both expensive and actually fixable" — so the
+case for shipping a PO-required submission check over a duplicate-detection
+model is made with a number instead of a hunch.
+
+**The AP admin who's tired of chasing the same three vendors.** They don't
+need a root-cause taxonomy; they need to know whether it's worth the
+awkward conversation with Pinegrove Catering about vendor records again. The
+Worklist tab answers that directly — named vendor, named cause, hours spent,
+whether it's still open — which is the form the fix actually takes before it's
+a policy change.
+
+**The person about to greenlight a 30-day pilot.** This is the case I built
+for myself and didn't expect to need. Before committing reviewer time and a
+controller's attention to an experiment, the Prevention scenario tab's power
+check answers the question that usually gets skipped: at this volume, could
+the proposed window even detect the effect you're hoping for? Here, the
+honest answer was no, and that's the finding that actually changed the plan.
+
 ## Two findings that argued against the pitch
 
 **The labour-savings case does not hold at single-customer scale.** Total
