@@ -43,7 +43,7 @@ required fields, and an [Audit Logs API](https://docs.ramp.com/developer-api/v1/
 with agent attribution. I verified each of those directly against a live page
 or the live API schema rather than assuming them — the full capability table
 and an earlier, coarser read of this same research that I had to correct are
-both in [`CASESTUDY.md`](CASESTUDY.md#1-how-i-looked-for-the-gap-and-how-that-research-evolved).
+both in [`CASESTUDY.md`](CASESTUDY.md#2-how-i-looked-for-the-gap-and-how-that-research-evolved).
 Building another exception detector or a basic LLM invoice-correction bot would
 now substantially overlap what's already shipped.
 

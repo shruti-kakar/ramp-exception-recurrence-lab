@@ -616,4 +616,3 @@ with tab_gap:
         "argument, not the numbers.</p></div>",
         unsafe_allow_html=True,
     )
-    _caption("PRD.md, CASESTUDY.md, ASSUMPTIONS.md and DESIGN.md in the repository carry the full reasoning.")

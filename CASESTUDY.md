@@ -39,7 +39,31 @@ enjoy: the rigor of financial controls and the creativity of building
 products. Having worked on the validation and risk side, I'm drawn to building
 tools that don't just identify problems, but help prevent them at scale.
 
-## 1. How I looked for the gap, and how that research evolved
+## 1. The workflow
+
+Before the findings, the shape of the thing. The five tabs in the app aren't
+five separate reports — they're one sitting, in order, the way a Product Ops
+reviewer would actually work through a month's exception backlog. Everything
+in the sections that follow is one of these five steps, examined in detail.
+
+```mermaid
+flowchart LR
+    A["<b>01 Baseline</b><br/>Scope the damage"]
+    B["<b>02 Where to fix</b><br/>Rank by what's worth fixing"]
+    C["<b>03 Worklist</b><br/>Turn it into named conversations"]
+    D["<b>04 Prevention scenario</b><br/>Pressure-test the number"]
+    E["<b>05 Gap map</b><br/>Say what wasn't built"]
+    A --> B --> C --> D --> E
+    E -. run it again next month .-> A
+
+    style B fill:#e5fe54,stroke:#c9e33c,stroke-width:2px
+```
+
+The *Where to fix* step is highlighted because it's the move the rest of this
+project is built around — see §4. Running the loop monthly is what would tell
+you whether last month's fix actually moved anything.
+
+## 2. How I looked for the gap, and how that research evolved
 
 I started from a constraint rather than an idea: I have no access to Ramp's
 internals, so anything I claim has to be falsifiable from public material and
@@ -68,7 +92,7 @@ category list, changes the picture:
 | Approval Intelligence | AI summaries, anomaly flags, recommendations, historical spending context | Already assists human reviewers |
 | Smart OCR and auto-coding | Extracts invoice data and learns GL coding from historical corrections | Already addresses missing and incorrect GL coding |
 | [Bill Pay submission policies](https://support.ramp.com/bill-pay-set-up) | Validates required information, flags violations, records overrides | Already enforces preventive controls |
-| [Audit Logs API](https://docs.ramp.com/developer-api/v1/api/audit-logs) and Bills/Vendors APIs | Records workflow events; agent attribution added in the September 2026 changelog | Potential foundation for recurrence analysis — see §5 |
+| [Audit Logs API](https://docs.ramp.com/developer-api/v1/api/audit-logs) and Bills/Vendors APIs | Records workflow events; agent attribution added in the September 2026 changelog | Potential foundation for recurrence analysis — see §6 |
 
 Fetching [support.ramp.com/ap-agents-available-in-ramp-bill-pay](https://support.ramp.com/ap-agents-available-in-ramp-bill-pay)
 directly turned up a detail the first pass missed entirely: Ramp's fraud
@@ -114,7 +138,7 @@ discovery. Full source-by-source verification, including which claims are
 checked against a live page and which were carried from an earlier pass
 without independent re-verification, is in [`ASSUMPTIONS.md`](ASSUMPTIONS.md).
 
-## 2. The hypothesis
+## 3. The hypothesis
 
 > Operations teams spend a measurable share of review effort on exceptions they
 > have already seen from the same vendor for the same reason. If that share is
@@ -126,7 +150,7 @@ to be large, and the repeats have to concentrate in a short list of vendors. If
 repeats were rare, or spread evenly across hundreds of vendors, the thesis fails
 and the right answer is to keep improving case resolution.
 
-## 3. What I built
+## 4. What I built
 
 A Python and Streamlit application over a reproducible 300-record synthetic
 dataset: six months, 36 vendors, 7,962 bills processed, five root causes.
@@ -153,7 +177,7 @@ The ranking multiplies the three: addressable repeat hours per month ×
 concentration × fixability. The naive volume ranking is kept on screen beside it,
 because where the two agree, this tool adds nothing.
 
-## 4. What the prototype found
+## 5. What the prototype found
 
 ### The repeat share is large and highly concentrated
 
@@ -238,7 +262,7 @@ This is the finding I would lead with in an interview. Not because the maths is
 hard, but because writing the power check into the tool is what turned a
 plausible-sounding plan into a wrong one, before anyone spent a month on it.
 
-## 5. A real data foundation: Ramp's own APIs
+## 6. A real data foundation: Ramp's own APIs
 
 Everything above runs on a synthetic CSV because that's what an outsider can
 responsibly build. But the most useful discovery in the second research pass
@@ -300,7 +324,7 @@ What's missing is the left-hand side: authorized customer access, API
 permissions, and a validated way to turn audit events into the same shape the
 rest of the app already expects.
 
-## 6. What my own model gets wrong
+## 7. What my own model gets wrong
 
 **The prevention index cannot see reopens.** Approval routing has the highest
 reopen rate in the dataset at 23%, nearly double every other cause, and the model
@@ -325,7 +349,7 @@ a record of how each cause was validated.
 known. In practice someone inferred it from a symptom, and the inference can be
 wrong in a way that quietly misdirects every number downstream.
 
-## 7. What I would do next, in order
+## 8. What I would do next, in order
 
 1. **Five operator interviews.** Are these the real causes? Does recurrence feel
    like the problem, or is it cycle time? What would you do with the worklist?
@@ -339,12 +363,12 @@ wrong in a way that quietly misdirects every number downstream.
    keyword baseline rather than demoed. It is the most impressive-looking
    addition and the least evidence-backed, so it goes last.
 5. **Only with real customer access, the real data foundation.** Swap the
-   synthetic CSV for Ramp's Audit Logs, Bills and Vendors APIs (§5), inferring
+   synthetic CSV for Ramp's Audit Logs, Bills and Vendors APIs (§6), inferring
    recurrence from event proxies instead of a labelled column, and validate
    that inference against cases an AP admin actually agrees are the same
    recurring problem before trusting it.
 
-## 8. What this is not
+## 9. What this is not
 
 No Ramp integration, no authentication, no real customer data, no AI inference,
 no measured savings. Every figure in this document comes from synthetic data
@@ -364,7 +388,7 @@ make test
 make app
 ```
 
-`make test` runs 58 tests. The figures in section 4 come from the bundled seed,
-so they will match exactly. Section 1's capability table and section 5's API
+`make test` runs 58 tests. The figures in section 5 come from the bundled seed,
+so they will match exactly. Section 2's capability table and section 6's API
 schema findings are cited to live Ramp pages instead — see `ASSUMPTIONS.md` for
 exactly which claims were fetched directly versus carried from an earlier pass.
