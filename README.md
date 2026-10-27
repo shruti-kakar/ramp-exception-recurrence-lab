@@ -2,7 +2,8 @@
 
 **From resolving exceptions to preventing them.**
 
-**[Try the live app →](https://ramp-exception-recurrence-lab.streamlit.app/)**
+**[Try the live app →](https://ramp-exception-recurrence-lab.streamlit.app/)** ·
+**[Read the case study →](https://claude.ai/code/artifact/f726b061-be17-48fb-a1a8-bca46d42ea0f)**
 
 An independent product-operations case study on [Ramp](https://ramp.com)
 [Bill Pay](https://ramp.com/accounts-payable). It asks a single question: once
@@ -236,7 +237,7 @@ first load. The app reads no secrets and makes no network calls.
 | Path | Purpose |
 | --- | --- |
 | `PRD.md` | Product requirements, written before any code |
-| `CASESTUDY.md` | Findings, including what the model gets wrong |
+| `CASESTUDY.md` | Findings, including what the model gets wrong — [read the formatted version](https://claude.ai/code/artifact/f726b061-be17-48fb-a1a8-bca46d42ea0f) |
 | `ASSUMPTIONS.md` | Every number traced to its source: computed, assumed, or cited, with links |
 | `MILESTONES.md` | Build sequence, remaining work, and the context budget |
 | `DESIGN.md` | Visual system, and why Ramp's real typefaces are not bundled |
