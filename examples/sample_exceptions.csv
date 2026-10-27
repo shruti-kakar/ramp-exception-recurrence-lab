@@ -1,0 +1,41 @@
+invoice_id,vendor,amount,exception_type,status,opened_at,resolved_at,root_cause,owner,minutes_spent,reopened,reviewer_note
+INV-20260030,Zephyr Imports,3561.14,coding_review,resolved,2026-04-04T16:09:00,2026-04-05T14:08:59,gl_coding,P. Suryavanshi,13,false,Split coding redone after controller review
+INV-20260019,Juniper Telecom,2273.77,invoice_data_incomplete,resolved,2026-04-05T10:00:00,2026-04-06T02:00:12,missing_po,R. Delgado,20,false,"No PO on the invoice, emailed requester for the number"
+INV-20260032,Quillon Software,4854.25,invoice_data_incomplete,resolved,2026-04-06T15:58:00,2026-04-07T04:10:26,missing_po,J. Lindqvist,21,false,Requester submitted before raising the PO
+INV-20260038,Ironvale Supply,935.27,invoice_data_incomplete,resolved,2026-04-08T15:56:00,2026-04-10T07:04:34,missing_po,J. Lindqvist,4,false,PO exists in the system but was never referenced on submission
+INV-20260023,Ironvale Supply,2795.67,invoice_data_incomplete,resolved,2026-04-09T17:01:00,2026-04-10T18:24:16,missing_po,J. Lindqvist,31,false,Requester submitted before raising the PO
+INV-20260039,Copperfield Staffing,5153.35,invoice_data_incomplete,resolved,2026-04-11T14:16:00,2026-04-11T19:21:31,missing_po,J. Lindqvist,13,false,PO exists in the system but was never referenced on submission
+INV-20260009,Arbor Health,1563.55,coding_review,resolved,2026-04-13T09:53:00,2026-04-14T11:28:03,gl_coding,P. Suryavanshi,17,false,"Department left blank, guessed from last month's bill"
+INV-20260005,Driftwood Travel,1191.38,payment_risk,resolved,2026-04-29T08:45:00,2026-05-01T18:27:16,duplicate_invoice,P. Suryavanshi,44,false,Same invoice number submitted twice by two requesters
+INV-20260024,Lumen Legal,8784.22,approval_stalled,resolved,2026-05-03T10:41:00,2026-05-04T18:49:28,approval_routing,P. Suryavanshi,15,false,"Sat unapproved for a week, escalated manually"
+INV-20260004,Thornbury Legal,688.31,vendor_record_incomplete,resolved,2026-05-11T18:12:00,2026-05-13T14:40:50,vendor_details,R. Delgado,50,false,W-9 on file is out of date
+INV-20260028,Northwind Logistics,2666.09,invoice_data_incomplete,resolved,2026-05-15T14:50:00,2026-05-15T20:50:55,missing_po,M. Haddad,40,false,"No PO on the invoice, emailed requester for the number"
+INV-20260015,Beacon Cloud,1705.95,coding_review,resolved,2026-05-15T18:38:00,2026-05-18T01:29:14,gl_coding,A. Okafor,10,false,Split coding redone after controller review
+INV-20260002,Beacon Cloud,550.82,coding_review,resolved,2026-05-19T11:30:00,2026-05-22T04:11:44,gl_coding,M. Haddad,13,false,Split coding redone after controller review
+INV-20260008,Atlas Freight,2255.35,coding_review,resolved,2026-05-27T14:58:00,2026-05-28T18:57:10,gl_coding,A. Okafor,14,false,Split coding redone after controller review
+INV-20260012,Yarrow Maintenance,902.29,vendor_record_incomplete,in_review,2026-05-27T17:57:00,,vendor_details,M. Haddad,38,false,W-9 on file is out of date
+INV-20260025,Orinoco Media,4569.51,approval_stalled,resolved,2026-05-30T12:23:00,2026-05-30T23:10:54,approval_routing,P. Suryavanshi,15,false,Threshold sent it to the wrong cost centre owner
+INV-20260011,Beacon Cloud,413.72,coding_review,in_review,2026-06-02T14:55:00,,gl_coding,A. Okafor,16,false,"Department left blank, guessed from last month's bill"
+INV-20260016,Umber Studios,1822.98,vendor_record_incomplete,resolved,2026-06-08T17:49:00,2026-06-10T08:43:36,vendor_details,M. Haddad,35,false,W-9 on file is out of date
+INV-20260022,Atlas Freight,154.79,invoice_data_incomplete,resolved,2026-06-16T13:12:00,2026-06-16T22:24:33,missing_po,J. Lindqvist,24,false,PO exists in the system but was never referenced on submission
+INV-20260006,Copperfield Staffing,142.67,invoice_data_incomplete,open,2026-06-16T18:20:00,,missing_po,R. Delgado,29,false,Requester submitted before raising the PO
+INV-20260037,Larkspur Design,599.08,approval_stalled,resolved,2026-06-19T14:40:00,2026-06-20T10:36:03,approval_routing,J. Lindqvist,17,false,"Sat unapproved for a week, escalated manually"
+INV-20260027,Larkspur Design,2708.28,vendor_record_incomplete,resolved,2026-06-22T09:48:00,2026-06-23T16:59:24,vendor_details,J. Lindqvist,24,false,"Bank details missing, chased vendor twice"
+INV-20260034,Thornbury Legal,571.3,vendor_record_incomplete,resolved,2026-06-29T09:57:00,2026-07-01T02:24:42,vendor_details,P. Suryavanshi,29,false,W-9 on file is out of date
+INV-20260020,Monsoon Hosting,6505.99,coding_review,resolved,2026-07-04T11:49:00,2026-07-06T19:53:13,gl_coding,P. Suryavanshi,21,true,Split coding redone after controller review
+INV-20260033,Atlas Freight,2151.03,coding_review,resolved,2026-07-04T12:59:00,2026-07-04T13:59:00,gl_coding,R. Delgado,8,true,"Department left blank, guessed from last month's bill"
+INV-20260031,Oakenshaw Rentals,2667.46,coding_review,resolved,2026-07-12T08:27:00,2026-07-13T06:10:04,gl_coding,A. Okafor,21,false,Split coding redone after controller review
+INV-20260013,Fernway Utilities,1067.5,coding_review,resolved,2026-07-13T15:04:00,2026-07-14T02:54:31,gl_coding,M. Haddad,19,false,Split coding redone after controller review
+INV-20260000,Copperfield Staffing,1718.29,invoice_data_incomplete,resolved,2026-07-14T15:09:00,2026-07-15T16:54:54,missing_po,J. Lindqvist,23,false,"No PO on the invoice, emailed requester for the number"
+INV-20260017,Orinoco Media,798.44,approval_stalled,in_review,2026-07-15T09:04:00,,approval_routing,P. Suryavanshi,28,false,Routed to an approver who left in August
+INV-20260021,Granite Shipping,2183.61,payment_risk,in_review,2026-07-25T17:39:00,,duplicate_invoice,A. Okafor,33,false,"Near match on amount and date, confirmed not a duplicate"
+INV-20260010,Yarrow Maintenance,1632.28,vendor_record_incomplete,open,2026-07-26T11:41:00,,vendor_details,M. Haddad,17,false,W-9 on file is out of date
+INV-20260007,Granite Shipping,1110.93,vendor_record_incomplete,resolved,2026-07-26T12:08:00,2026-07-27T04:21:11,vendor_details,M. Haddad,29,false,W-9 on file is out of date
+INV-20260014,Orinoco Media,14830.82,vendor_record_incomplete,resolved,2026-07-31T17:30:00,2026-07-31T18:30:00,vendor_details,J. Lindqvist,27,true,"Remittance email bounced, vendor record stale"
+INV-20260018,Driftwood Travel,3299.81,vendor_record_incomplete,in_review,2026-08-04T14:07:00,,vendor_details,J. Lindqvist,38,false,W-9 on file is out of date
+INV-20260035,Tallow & Finch,867.62,vendor_record_incomplete,resolved,2026-08-09T16:34:00,2026-08-09T17:34:00,vendor_details,J. Lindqvist,36,false,"Remittance email bounced, vendor record stale"
+INV-20260036,Granite Shipping,1572.51,payment_risk,resolved,2026-08-12T08:04:00,2026-08-12T15:59:38,duplicate_invoice,M. Haddad,53,true,Same invoice number submitted twice by two requesters
+INV-20260026,Yarrow Maintenance,2049.69,vendor_record_incomplete,resolved,2026-09-01T08:16:00,2026-09-01T09:16:00,vendor_details,A. Okafor,42,false,W-9 on file is out of date
+INV-20260003,Yarrow Maintenance,490.91,vendor_record_incomplete,resolved,2026-09-04T12:27:00,2026-09-05T15:43:45,vendor_details,M. Haddad,20,false,"Remittance email bounced, vendor record stale"
+INV-20260029,Northwind Logistics,4609.12,invoice_data_incomplete,open,2026-09-15T12:39:00,,missing_po,J. Lindqvist,13,false,Requester submitted before raising the PO
+INV-20260001,Northwind Logistics,459.72,invoice_data_incomplete,resolved,2026-09-15T12:51:00,2026-09-16T23:03:08,missing_po,M. Haddad,21,false,Requester submitted before raising the PO

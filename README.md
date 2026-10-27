@@ -2,10 +2,12 @@
 
 **From resolving exceptions to preventing them.**
 
-An independent product-operations case study on Ramp Bill Pay. It asks a single
-question: once an invoice exception has been resolved, what makes the same
-exception stop happening — and which upstream fix is worth running an experiment
-on first?
+**[Try the live app →](https://ramp-exception-recurrence-lab.streamlit.app/)**
+
+An independent product-operations case study on [Ramp](https://ramp.com)
+[Bill Pay](https://ramp.com/accounts-payable). It asks a single question: once
+an invoice exception has been resolved, what makes the same exception stop
+happening — and which upstream fix is worth running an experiment on first?
 
 Not affiliated with Ramp. All data is synthetic. No figure in this project is a
 measured result.
@@ -15,6 +17,21 @@ make install && make data && make test && make app
 ```
 
 ---
+
+## Use case, in one glance
+
+| | |
+| --- | --- |
+| **Problem** | Repeated exceptions keep consuming review time even after each individual case gets resolved |
+| **Who's asking** | Product Operations at a Bill Pay-type platform, an AP admin working the queue, or a controller deciding what to fix next |
+| **What they do here** | Open the app, see which root cause is both expensive *and* preventable, pull the specific vendor conversations behind it, and pressure-test any fix before committing budget to a pilot |
+| **What it replaces** | A spreadsheet pivot sorted by exception count — which answers "what's biggest," not "what's worth fixing" |
+| **What it is not** | A Ramp product, a Ramp integration, or a claim about what Ramp's internal tooling does or doesn't already do |
+
+The five tabs walking through that loop, with screenshots, are in
+[How I'd actually use this](#how-id-actually-use-this) below. Every number on
+screen traces back to a file or a cited source — see
+[`ASSUMPTIONS.md`](ASSUMPTIONS.md).
 
 ## Why this and not an exception detector
 
@@ -193,7 +210,10 @@ deployment with no build step.
 
 Bring your own CSV through the sidebar uploader. The required columns are the
 ten in `src/config.py`; the loader reports every schema problem at once rather
-than failing on the first.
+than failing on the first. [`examples/sample_exceptions.csv`](examples/sample_exceptions.csv)
+is a 40-row file in the exact expected shape — a clean upload to try the loader
+against, with a repeat cluster, an open case, and a reopened case already in it
+so the interesting views aren't empty on first upload.
 
 ## Deploy
 
@@ -207,9 +227,11 @@ first load. The app reads no secrets and makes no network calls.
 | --- | --- |
 | `PRD.md` | Product requirements, written before any code |
 | `CASESTUDY.md` | Findings, including what the model gets wrong |
+| `ASSUMPTIONS.md` | Every number traced to its source: computed, assumed, or cited, with links |
 | `MILESTONES.md` | Build sequence, remaining work, and the context budget |
 | `DESIGN.md` | Visual system, and why Ramp's real typefaces are not bundled |
 | `AGENTS.md` | Working rules for anyone or anything editing this repo |
+| `examples/sample_exceptions.csv` | A clean 40-row file to try the uploader against |
 | `src/config.py` | Every arguable assumption, each with its source |
 | `src/generate_data.py` | Fixed-seed synthetic data, stdlib only |
 | `src/loader.py` | Strict CSV ingestion and schema validation |
@@ -226,6 +248,11 @@ No Ramp integration. No authentication. No real customer data. No AI inference.
 No measured savings. The dataset is generated with a recurrence pattern built in,
 so the pattern the app finds is the one it was given. The contribution is the
 method and the findings that cut against the original pitch.
+
+Every figure above, and every assumption behind it, is traced in
+[`ASSUMPTIONS.md`](ASSUMPTIONS.md) — including which claims about Ramp's
+actual product are independently verified against a live page and which are
+carried from the original brief without re-checking.
 
 Nothing here uses or refers to proprietary information from any current or former
 employer.
