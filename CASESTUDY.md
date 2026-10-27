@@ -3,9 +3,15 @@
 **Area:** Ramp Bill Pay · **Discipline:** Product Operations · **Date:** 26 October 2026
 **Author:** Shruti Kakar · **Status:** independent, unofficial, synthetic data only
 
-A short account of how I looked for a gap in a product I do not work on, what I
-built to test whether the gap mattered, and the two findings that argued against
-my own pitch.
+An independent product investigation inspired by my experience validating
+financial workflows and resolving exceptions in audit and risk at JPMorgan
+Chase. What follows is how I looked for a gap in a product I do not work on,
+what I built to test whether the gap mattered, and the two findings that
+argued against my own pitch.
+
+**[Try the live app](https://ramp-exception-recurrence-lab.streamlit.app/)** ·
+[source on GitHub](https://github.com/shruti-kakar/ramp-exception-recurrence-lab) ·
+[README](README.md) · [PRD](PRD.md) · [assumptions and sources](ASSUMPTIONS.md)
 
 ---
 
@@ -16,28 +22,30 @@ risk, and technology, where I've seen firsthand how much operational effort
 goes into identifying, investigating, and resolving exceptions.
 
 My work has involved validating financial workflows, investigating
-inconsistencies across multiple systems, and testing AI-driven processes to
+inconsistencies across five systems, and testing AI-driven processes to
 ensure they produce accurate, reliable results. Through Python and Alteryx
 automation, I've helped reduce manual validation effort by approximately 40%,
 while also developing testing approaches for multi-agent workflows.
 
-One thing that stood out to me was that resolving an exception doesn't
-necessarily prevent it from happening again. Teams can spend significant time
-investigating individual issues without always having a systematic way to
-connect those issues to recurring upstream causes.
+One thing that stood out to me was that **resolving an exception doesn't
+necessarily prevent it from happening again.** Teams can spend significant
+time investigating individual issues without always having a systematic way
+to connect those issues to recurring upstream causes.
 
-That experience shaped how I approached Ramp's Bill Pay product. Ramp has
-already built sophisticated capabilities around detecting anomalies, reviewing
-invoices, and enforcing financial controls — more sophisticated than I gave it
-credit for on a first pass, see below. I was interested in exploring what
-could come next: could exception history become a feedback loop that helps
-finance teams identify recurring problems, prioritize preventative changes,
-and measure whether those interventions work?
+That experience shaped how I approached Ramp's Bill Pay product.
+
+Ramp has already built sophisticated capabilities around detecting anomalies,
+reviewing invoices, and enforcing financial controls — more sophisticated than
+I gave it credit for on a first pass, see §2. I was interested in exploring
+what could come next: **could exception history become a feedback loop that
+helps finance teams identify recurring problems, prioritize preventative
+changes, and measure whether those interventions work?**
 
 This project brings together two parts of my experience that I particularly
 enjoy: the rigor of financial controls and the creativity of building
-products. Having worked on the validation and risk side, I'm drawn to building
-tools that don't just identify problems, but help prevent them at scale.
+products. Having worked on the validation and risk side, I'm excited by the
+opportunity to build tools that don't just identify problems, but help
+prevent them at scale.
 
 ## 1. The workflow
 
@@ -378,6 +386,31 @@ two findings that cut against the original pitch, not the numbers.
 
 Nothing here uses or refers to any proprietary information from a current or
 former employer.
+
+## 10. What this project taught me about Product Operations
+
+I started this project believing that preventing recurring financial
+exceptions would create a meaningful efficiency opportunity.
+
+Building and evaluating the prototype challenged that assumption. The
+estimated labor savings were smaller than expected, and my original
+experiment design wasn't statistically feasible over 30 days.
+
+Those findings changed the questions I would ask before proposing this as a
+product investment. Rather than immediately advocating for a new feature, I
+would first validate whether recurrence is a significant problem for Ramp's
+customers, understand whether the greatest cost comes from review effort,
+delayed payments, or operational risk, and test whether existing workflows
+could address the underlying causes.
+
+My background in audit and risk taught me to investigate problems
+systematically and validate conclusions against evidence. Building this
+prototype helped me apply that same discipline to product decisions.
+
+**That's what excites me about Product Operations at Ramp: the opportunity to
+combine technical execution, financial domain understanding, and customer
+insight to identify which problems are genuinely worth solving, and then
+build and measure solutions that make financial operations better.**
 
 ## Reproducing every number in this document
 
