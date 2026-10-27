@@ -1,0 +1,16 @@
+# Theme approximates Ramp's public brand: near-black ink on paper with a single
+# acid-lime accent. See DESIGN.md for sources and for why the real typefaces are
+# not bundled.
+[theme]
+base = "light"
+primaryColor = "#1C1B17"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F7F6F3"
+textColor = "#1C1B17"
+font = "sans serif"
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false
