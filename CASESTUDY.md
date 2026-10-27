@@ -3,6 +3,8 @@
 **Area:** Ramp Bill Pay · **Discipline:** Product Operations · **Date:** 26 October 2026
 **Author:** Shruti Kakar · **Status:** independent, unofficial, synthetic data only
 
+https://ramp-exception-recurrence-lab.streamlit.app/
+
 A short account of how I looked for a gap in a product I do not work on, what I
 built to test whether the gap mattered, and the two findings that argued against
 my own pitch.
